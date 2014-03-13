@@ -16,15 +16,14 @@ public class Utilisateur implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    private String firstname;  
-
+    private String firstname;
     private String lastname;  
     private String login; 
     
     public Utilisateur() {  
     }  
   
-    public Utilisateur(final String login, final String lastname, final String firstname) {  
+    public Utilisateur(final String lastname, final String firstname, final String login) {  
         this.login = login;  
         this.lastname = lastname;  
         this.firstname = firstname;  

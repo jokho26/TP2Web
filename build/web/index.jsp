@@ -65,7 +65,7 @@
         </ol>  
 
         <!-- Fin du menu -->  
-
+        
         <!-- Zone qui affiche les utilisateurs si le paramètre action vaut listerComptes -->  
         <c:if test="${param['action'] == 'listerLesUtilisateurs'}" >  
             <h2>Liste des utilisateurs</h2>  

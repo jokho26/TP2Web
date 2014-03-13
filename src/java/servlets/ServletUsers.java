@@ -7,7 +7,9 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -61,12 +63,47 @@ public class ServletUsers extends HttpServlet {
                 String prenom = request.getParameter("prenom");
                 String login = request.getParameter("login");
                 
-                gestionnaireUtilisateurs.creeUtilisateur(nom, prenom, login);
+                // TODO verif les attributs
+                Utilisateur u = gestionnaireUtilisateurs.creeUtilisateur(nom, prenom, login);
                 
-                 // TODO à changer, utiliser la recherche de yan
-                forwardTo = "index.jsp?action=listerLesUtilisateurs";  
-                message = "Liste des utilisateurs";  
-            } else {  
+                if (u == null) {
+                    forwardTo = "index.jsp?action=erreurCreationUtilisateur";  
+                    message = "Erreur dans la création de l'utilisateur : paramètre incorrect";  
+                }
+                else {
+                    ArrayList<Utilisateur> liste = new  ArrayList<Utilisateur>();
+                    liste.add(u);
+                    request.setAttribute("listeDesUsers", liste); 
+                    forwardTo = "index.jsp?action=listerLesUtilisateurs";
+                    message = "Création d'un nouvel utilisateur."; 
+                }
+
+            } else if (action.equals("chercherParLogin")) {
+                String login = request.getParameter("login");
+                
+                Utilisateur u = gestionnaireUtilisateurs.getUserByLogin(login);
+                ArrayList<Utilisateur> liste = new  ArrayList<Utilisateur>();
+                liste.add(u);
+                request.setAttribute("listeDesUsers", liste);  
+                forwardTo = "index.jsp?action=listerLesUtilisateurs";
+                message = "Chercher un utilisateur par login";
+                
+            }
+            else if (action.equals("updateUtilisateur")) {
+                // On récupere les parametres pour mettre à jour un utilisateur
+                String newNom = request.getParameter("nom");
+                String newPrenom = request.getParameter("prenom");
+                String login = request.getParameter("login");
+                
+                Utilisateur u = gestionnaireUtilisateurs.updateUser(login, newNom, newPrenom);
+                ArrayList<Utilisateur> liste = new  ArrayList<Utilisateur>();
+                liste.add(u);
+                
+                request.setAttribute("listeDesUsers", liste); 
+                forwardTo = "index.jsp?action=listerLesUtilisateurs";
+                message = "Mise à jour d'un utilisateur."; 
+                
+            } else { 
                 forwardTo = "index.jsp?action=todo";  
                 message = "La fonctionnalité pour le paramètre " + action + " est à implémenter !";  
             }  
